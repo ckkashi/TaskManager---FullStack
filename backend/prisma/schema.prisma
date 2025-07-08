@@ -13,15 +13,53 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id           Int      @unique @default(autoincrement())
-  displayName  String   @map("display_name")
-  email        String
-  password     String
-  avatar       String
-  refreshToken String   @map("refresh_token")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+model User {
+  id            Int          @unique @default(autoincrement())
+  displayName   String       @map("display_name")
+  email         String
+  password      String
+  avatar        String
+  CreatedTasks  Task[]       @relation("CreatedTasks")
+  AssignedTasks Task[]       @relation("AssignedTasks")
+  categories    Categories[] @relation("UserCategories")
+  refreshToken  String?      @map("refresh_token")
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+
   @@map("user")
 }
 
+model Task {
+  id           Int        @unique @default(autoincrement())
+  title        String
+  description  String
+  status       String
+  priority     String
+  dueDate      DateTime   @map("due_date")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  createdById  Int        @map("created_by_id")
+  createdBy    User       @relation("CreatedTasks", fields: [createdById], references: [id])
+  assignedToId Int?       @map("assigned_to_id")
+  assignedTo   User?      @relation("AssignedTasks", fields: [assignedToId], references: [id])
+  subTasks     Task[]     @relation("SubTasks")
+  parentTaskId Int?       @map("parent_task_id")
+  parentTask   Task?      @relation("SubTasks", fields: [parentTaskId], references: [id])
+  categoryId   Int        @map("category_id")
+  category     Categories @relation("TaskCategories", fields: [categoryId], references: [id])
+
+  @@map("tasks")
+}
+
+model Categories {
+  id          Int      @unique @default(autoincrement())
+  name        String
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  tasks       Task[]   @relation("TaskCategories")
+  userId      Int      @map("user_id")
+  user        User     @relation("UserCategories", fields: [userId], references: [id])
+
+  @@map("categories")
+}
