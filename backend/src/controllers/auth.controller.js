@@ -20,10 +20,6 @@ const refreshTokenController = asyncHandler(async (req, res) => {
     res.status(201).json(new ApiResponse(200, 'Token refresh successfully', {}));
 });
 
-const refreshToken2Controller = asyncHandler(async (req, res) => {
-    res.status(201).json(new ApiResponse(200, 'Token refresh successfully', {}));
-});
-
 export {
     registerController,
     loginController,
