@@ -25,7 +25,7 @@ const registerController = asyncHandler(async (req, res) => {
         where: { email }
     });
     if(checkExistingUser){
-        throw ApiError.notFound('Invalid email or password');
+        throw ApiError.bad('User with this email already exists');
     }
     const encryptedPass = await hashPassword(password);
     if(!encryptedPass){
@@ -127,14 +127,53 @@ const logoutController = asyncHandler(async (req, res) => {
 
 
 
-
+//
+// --------------- Refresh Token Controller - START ---------------
 const refreshTokenController = asyncHandler(async (req, res) => {
-    res.status(201).json(new ApiResponse(200, 'Token refresh successfully', {}));
+    const currentRefreshToken = req.cookies.refresh_token;
+    if(!currentRefreshToken){
+        throw ApiError.unautorized('Unauthorized');
+    }
+    const findUser = await db.user.findFirst({
+        where: { refreshToken: currentRefreshToken }
+    });
+    if(!findUser){
+        throw ApiError.unautorized('Unauthorized');
+    }
+    
+    delete findUser.password;
+    delete findUser.refreshToken;
+
+    const { accessToken, refreshToken } = generateBothTokens(findUser);
+
+    const refreshTokenUpdated = await db.user.update({
+        where: {
+            id: findUser.id
+        },
+        data: {
+            refreshToken: refreshToken
+        }
+    });
+
+    if (!refreshTokenUpdated) {
+        throw ApiError.bad('Something went wrong');
+    }
+    
+    res.cookie('access_token', accessToken, cookieOptions);
+    res.cookie('refresh_token', refreshToken, cookieOptions);
+
+    const response = {
+        accessToken,
+        refreshToken
+    }
+    res.status(201).json(new ApiResponse(200, 'Token refresh successfully', response));
 });
+// --------------- Refresh Token Controller - END ---------------
+//
 
 export {
     registerController,
     loginController,
     logoutController,
-    refreshTokenController,
+    refreshTokenController
 };
