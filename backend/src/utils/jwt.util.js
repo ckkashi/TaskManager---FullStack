@@ -11,3 +11,10 @@ export const generateRefreshToken = (user) => {
         expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
     });
 };
+
+export const generateBothTokens = (user) => {
+    return {
+        accessToken: generateAccessToken(user),
+        refreshToken: generateRefreshToken(user)
+    };
+}
