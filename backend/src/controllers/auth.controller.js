@@ -101,6 +101,7 @@ const loginController = asyncHandler(async (req, res) => {
 
 
 
+
 //
 // --------------- Logout Controller - START ---------------
 const logoutController = asyncHandler(async (req, res) => {
@@ -127,6 +128,8 @@ const logoutController = asyncHandler(async (req, res) => {
 
 
 
+
+
 //
 // --------------- Refresh Token Controller - START ---------------
 const refreshTokenController = asyncHandler(async (req, res) => {
@@ -140,7 +143,7 @@ const refreshTokenController = asyncHandler(async (req, res) => {
     if(!findUser){
         throw ApiError.unautorized('Unauthorized');
     }
-    
+
     delete findUser.password;
     delete findUser.refreshToken;
 
@@ -170,6 +173,9 @@ const refreshTokenController = asyncHandler(async (req, res) => {
 });
 // --------------- Refresh Token Controller - END ---------------
 //
+
+
+
 
 export {
     registerController,
