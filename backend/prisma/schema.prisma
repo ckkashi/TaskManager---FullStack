@@ -33,8 +33,8 @@ model Task {
   id           Int        @unique @default(autoincrement())
   title        String
   description  String
-  status       String
-  priority     String
+  status       TaskStatus
+  priority     TaskPriority
   dueDate      DateTime   @map("due_date")
   createdAt    DateTime   @default(now()) @map("created_at")
   updatedAt    DateTime   @updatedAt @map("updated_at")
@@ -61,4 +61,17 @@ model Categories {
   userId      Int      @map("user_id")
   user        User     @relation("UserCategories", fields: [userId], references: [id])
   @@map("categories")
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  ON_HOLD
+  COMPLETED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
 }
