@@ -13,8 +13,11 @@ export const generateRefreshToken = (user) => {
 };
 
 export const generateBothTokens = (user) => {
+    const tokenData = {
+        id: user.id
+    };
     return {
-        accessToken: generateAccessToken(user),
-        refreshToken: generateRefreshToken(user)
+        accessToken: generateAccessToken(tokenData),
+        refreshToken: generateRefreshToken(tokenData)
     };
 }

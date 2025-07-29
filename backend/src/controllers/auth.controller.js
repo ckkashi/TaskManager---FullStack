@@ -57,7 +57,7 @@ const registerController = asyncHandler(async (req, res) => {
 const loginController = asyncHandler(async (req, res) => {
     const {email, password} = req.body;
     const findUser = await db.user.findFirst({
-        where: {email},
+        where: {email}
     });
     if(!findUser){
         throw ApiError.bad('Invalid credentials');
