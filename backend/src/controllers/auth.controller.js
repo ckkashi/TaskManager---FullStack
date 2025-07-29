@@ -121,7 +121,7 @@ const logoutController = asyncHandler(async (req, res) => {
 
     res.clearCookie('access_token',cookieOptions);
     res.clearCookie('refresh_token',cookieOptions);
-    res.status(201).json(new ApiResponse(200, 'User loggedout successfully', {}));
+    res.status(200).json(new ApiResponse(200, 'User loggedout successfully', {}));
 });
 // --------------- Logout Controller - END ---------------
 //
@@ -169,7 +169,7 @@ const refreshTokenController = asyncHandler(async (req, res) => {
         accessToken,
         refreshToken
     }
-    res.status(201).json(new ApiResponse(200, 'Token refresh successfully', response));
+    res.status(200).json(new ApiResponse(200, 'Token refresh successfully', response));
 });
 // --------------- Refresh Token Controller - END ---------------
 //
