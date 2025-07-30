@@ -36,12 +36,19 @@ const registerController = asyncHandler(async (req, res) => {
             displayName,
             email,
             password: encryptedPass,
-            avatar: avatar.filename
+            avatar: avatar.filename,
+            categories: {
+                create: {
+                    name: 'general',
+                    description: 'for general tasks'
+                }
+            }
         }
     });
     if(!createdUser){
         throw ApiError.bad('Something went wrong');
     }
+
     delete createdUser.password;
     res.status(201).json(new ApiResponse(200, 'User registered successfully', createdUser));
 });

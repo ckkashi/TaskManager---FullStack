@@ -138,7 +138,10 @@ const getCategoryController = asyncHandler(async (req,res) => {
         //return category against id
         message = `Successfully fetch`;
         const specificCategory =  await db.categories.findUnique({
-            where: { id: id, userId: userId }
+            where: { id: id, userId: userId },
+            include: {
+                tasks: true
+            }
         });
         if(!specificCategory){
             throw ApiError.notFound(`Category not found with ID: ${id}`);

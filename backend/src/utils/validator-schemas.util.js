@@ -1,6 +1,7 @@
 import Joi from "joi";
 
 //ENUMS
+
 const TaskStatus = {
     PENDING: 'PENDING',
     IN_PROGRESS: 'IN_PROGRESS',
@@ -49,7 +50,8 @@ export const addTaskSchema = Joi.object({
     description : Joi.string().min(3).max(150).required(),
     status: Joi.string().valid(TaskStatus.PENDING,TaskStatus.IN_PROGRESS,TaskStatus.ON_HOLD,TaskStatus.COMPLETED).required(),
     priority: Joi.string().valid(TaskPriority.LOW,TaskPriority.MEDIUM,TaskPriority.HIGH).required(),
-    dueData: Joi.date().iso()
+    dueDate: Joi.date().iso(),
+    categoryId: Joi.number()
 });
 
 export const editTaskSchema = Joi.object({
@@ -57,5 +59,5 @@ export const editTaskSchema = Joi.object({
     description : Joi.string().min(3).max(150),
     status: Joi.string().valid(TaskStatus.PENDING,TaskStatus.IN_PROGRESS,TaskStatus.ON_HOLD,TaskStatus.COMPLETED),
     priority: Joi.string().valid(TaskPriority.LOW,TaskPriority.MEDIUM,TaskPriority.HIGH),
-    dueData: Joi.date().iso()
+    dueDate: Joi.date().iso()
 });
