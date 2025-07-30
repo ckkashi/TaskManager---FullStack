@@ -59,5 +59,6 @@ export const editTaskSchema = Joi.object({
     description : Joi.string().min(3).max(150),
     status: Joi.string().valid(TaskStatus.PENDING,TaskStatus.IN_PROGRESS,TaskStatus.ON_HOLD,TaskStatus.COMPLETED),
     priority: Joi.string().valid(TaskPriority.LOW,TaskPriority.MEDIUM,TaskPriority.HIGH),
-    dueDate: Joi.date().iso()
+    dueDate: Joi.date().iso(),
+    categoryId: Joi.number()
 });

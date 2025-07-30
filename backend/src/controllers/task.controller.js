@@ -52,7 +52,23 @@ const addTaskController = asyncHandler(async (req,res)=>{
 
 //
 // --------------- EDIT Task Controller - START ---------------
-const editTaskController = asyncHandler(async (req,res)=>{});
+const editTaskController = asyncHandler(async (req,res)=>{
+    const userId = getCurrentUserID(req);
+    const taskId = +req.params.id;
+    if(!taskId){
+        throw ApiError.notFound('Task not found');
+    }
+    if(!req.body){
+        throw ApiError.bad('Something went wrong - data will be missing');
+    }
+    const updatedTask = await db.task.update({
+        where: {id: taskId},
+        data: {
+            ...req.body
+        }
+    });
+    res.status(200).json(new ApiResponse(200, 'Task updated successfully', updatedTask));
+});
 // --------------- EDIT Task Controller - END ---------------
 //
 
