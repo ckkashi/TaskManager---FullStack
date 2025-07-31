@@ -141,9 +141,78 @@ const deleteTaskController = asyncHandler(async (req,res)=>{
 
 
 
+//
+// --------------- ASSIGN Task Controller - START ---------------
+const assignTaskController = asyncHandler(async (req,res)=>{
+    const userId = getCurrentUserID(req);
+
+    const taskId = +req.query.taskId;
+    const assignToId = +req.query.assignedTo;
+    if(!taskId && !assignToId){
+        throw ApiError.notFound("Task not found");
+    }
+
+    const assigneddTask = await db.task.update({
+        where: {
+            id: taskId,
+            createdById : userId
+        },
+        data: {
+            assignedToId: assignToId
+        }
+    });
+    if(!assigneddTask){
+        throw ApiError.bad("Something went wrong");
+    }
+    const message = `Task assigned successfully.`;
+    res.status(200).json(new ApiResponse(200,message));
+});
+// --------------- ASSIGN Task Controller - END ---------------
+//
+
+
+
+
+//
+// --------------- GET ASSIGN Task Controller - START ---------------
+const getAssignTaskController = asyncHandler(async (req,res)=>{
+    const userId = getCurrentUserID(req);
+    const taskId = +req.params.id;
+    let message = '';
+    let data = [];
+    if(!taskId){
+        //get all assigned task
+        const assignedTasksList = await db.task.findMany({
+            where: { 
+                assignedToId: userId,
+                parentTaskId: null
+            }
+        });
+        data = assignedTasksList;
+        message = `Assigned task fetch successfully`;
+    } else{
+        //get specific assigned task
+        const assignedTasksList = await db.task.findFirst({
+            where: {
+                id: taskId,
+                assignedToId: userId
+            }
+        });
+        data = assignedTasksList;
+        message = `Assigned task fetch successfully against id: ${taskId}`;
+    }
+    res.status(200).json(new ApiResponse(200, message, data));
+});
+// --------------- GET ASSIGN Task Controller - END ---------------
+//
+
+
+
 export {
     addTaskController,
     editTaskController,
     getTaskController,
-    deleteTaskController
+    deleteTaskController,
+    assignTaskController,
+    getAssignTaskController
 };

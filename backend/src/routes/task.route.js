@@ -9,7 +9,9 @@ import {
     addTaskController, 
     getTaskController, 
     editTaskController, 
-    deleteTaskController 
+    deleteTaskController,
+    assignTaskController,
+    getAssignTaskController
 } from "../controllers/task.controller.js";
 
 const taskRouter = Router();
@@ -27,10 +29,10 @@ taskRouter.delete('/delete/:id', AuthMiddleware, deleteTaskController);
 
 //assign task routes
 // add to assign - query parameters - http://localhost:5000/add/assign?taskId=2&assignedTo=5
-taskRouter.put('/add/assign', AuthMiddleware, ()=>{});
+taskRouter.put('/add/assign', AuthMiddleware, assignTaskController);
 // get assign task
-taskRouter.put('/get/assign', AuthMiddleware, ()=>{});
+taskRouter.get('/get/assign', AuthMiddleware, getAssignTaskController);
 // get specific assign task
-taskRouter.put('/get/assign/:id', AuthMiddleware, ()=>{});
+taskRouter.get('/get/assign/:id', AuthMiddleware, getAssignTaskController);
 
 export default taskRouter;
