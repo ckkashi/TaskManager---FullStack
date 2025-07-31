@@ -25,4 +25,12 @@ taskRouter.get('/get/:id', AuthMiddleware, getTaskController);
 // task and sub task delete
 taskRouter.delete('/delete/:id', AuthMiddleware, deleteTaskController);
 
+//assign task routes
+// add to assign - query parameters - http://localhost:5000/add/assign?taskId=2&assignedTo=5
+taskRouter.put('/add/assign', AuthMiddleware, ()=>{});
+// get assign task
+taskRouter.put('/get/assign', AuthMiddleware, ()=>{});
+// get specific assign task
+taskRouter.put('/get/assign/:id', AuthMiddleware, ()=>{});
+
 export default taskRouter;
