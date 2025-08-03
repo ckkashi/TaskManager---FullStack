@@ -183,9 +183,9 @@ const getAssignTaskController = asyncHandler(async (req,res)=>{
     if(!taskId){
         //get all assigned task
         const assignedTasksList = await db.task.findMany({
-            where: { 
+            where: {
                 assignedToId: userId,
-                parentTaskId: null
+                createdById: {not: userId}
             }
         });
         data = assignedTasksList;
@@ -196,7 +196,8 @@ const getAssignTaskController = asyncHandler(async (req,res)=>{
             where: {
                 id: taskId,
                 assignedToId: userId
-            }
+            },
+            include: {subTasks: true}
         });
         data = assignedTasksList;
         message = `Assigned task fetch successfully against id: ${taskId}`;
@@ -208,11 +209,43 @@ const getAssignTaskController = asyncHandler(async (req,res)=>{
 
 
 
+
+//
+// --------------- REMOVE ASSIGN Task Controller - START ---------------
+const removeAssignTaskController = asyncHandler(async (req,res)=>{
+    const userId = getCurrentUserID(req);
+
+    const taskId = +req.query.taskId;
+    if(!taskId){
+        throw ApiError.notFound("Task not found");
+    }
+
+    const assigneddTask = await db.task.update({
+        where: {
+            id: taskId,
+            createdById : userId
+        },
+        data: {
+            assignedToId: null
+        }
+    });
+    if(!assigneddTask){
+        throw ApiError.bad("Something went wrong");
+    }
+    const message = `Remove user from task successfully.`;
+    res.status(204).json(new ApiResponse(200,message));
+});
+// --------------- REMOVE ASSIGN Task Controller - END ---------------
+//
+
+
+
 export {
     addTaskController,
     editTaskController,
     getTaskController,
     deleteTaskController,
     assignTaskController,
-    getAssignTaskController
+    getAssignTaskController,
+    removeAssignTaskController
 };
