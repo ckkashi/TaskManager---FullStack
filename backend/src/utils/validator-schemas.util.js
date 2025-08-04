@@ -36,11 +36,15 @@ export const loginAuthSchema = Joi.object({
 export const addCategorySchema = Joi.object({
     name : Joi.string().min(3).required(),
     description: Joi.string().min(10).max(100).required(),
+    color: Joi.string().default('').required(),
+    icon: Joi.string().default('').required()
 });
 
 export const editCategorySchema = Joi.object({
     name : Joi.string().min(3),
-    description: Joi.string().min(10).max(100)
+    description: Joi.string().min(10).max(100),
+    color: Joi.string().min(3).max(100),
+    icon: Joi.string().min(3).max(100)
 });
 
 //------------

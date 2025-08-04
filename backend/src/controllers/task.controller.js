@@ -145,16 +145,25 @@ const deleteTaskController = asyncHandler(async (req,res)=>{
 // --------------- ASSIGN Task Controller - START ---------------
 const assignTaskController = asyncHandler(async (req,res)=>{
     const userId = getCurrentUserID(req);
-
-    const taskId = +req.query.taskId;
-    const assignToId = +req.query.assignedTo;
-    if(!taskId && !assignToId){
-        throw ApiError.notFound("Task not found");
+    const { taskId, assignedToEmail } = req.body;
+    const tId = +taskId;
+    const getUser = await db.user.findFirst({
+        where: { email: assignedToEmail }
+    });
+    
+    if(!getUser){
+        throw ApiError.notFound("User with this email not found");
     }
-
+    const assignToId = getUser.id;
+    if(!tId && !assignToId){
+        throw ApiError.notFound("some data was missing in request");
+    }
+    if(assignToId == userId){
+        throw ApiError.notFound("user not assign task to it self");
+    }
     const assigneddTask = await db.task.update({
         where: {
-            id: taskId,
+            id: tId,
             createdById : userId
         },
         data: {
@@ -186,6 +195,14 @@ const getAssignTaskController = asyncHandler(async (req,res)=>{
             where: {
                 assignedToId: userId,
                 createdById: {not: userId}
+            },
+            include: {
+                createdBy: {
+                    select: { displayName: true, email: true, avatar: true}
+                },
+                category: {
+                    select: {name:true, color:true, icon: true}
+                }
             }
         });
         data = assignedTasksList;
@@ -197,7 +214,15 @@ const getAssignTaskController = asyncHandler(async (req,res)=>{
                 id: taskId,
                 assignedToId: userId
             },
-            include: {subTasks: true}
+            include: {
+                subTasks: true,
+                createdBy: {
+                    select: { displayName: true, email: true, avatar: true}
+                },
+                category: {
+                    select: {name:true, color:true, icon: true}
+                }
+            }
         });
         data = assignedTasksList;
         message = `Assigned task fetch successfully against id: ${taskId}`;

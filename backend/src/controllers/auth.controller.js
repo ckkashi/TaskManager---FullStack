@@ -40,7 +40,9 @@ const registerController = asyncHandler(async (req, res) => {
             categories: {
                 create: {
                     name: 'general',
-                    description: 'for general tasks'
+                    description: 'for general tasks',
+                    color: '',
+                    icon: ''
                 }
             }
         }

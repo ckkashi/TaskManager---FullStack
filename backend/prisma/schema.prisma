@@ -20,7 +20,7 @@ model User {
   password      String
   avatar        String
   CreatedTasks  Task[]       @relation("CreatedTasks")
-  AssignedTasks Task[]       @relation("AssignedTasks") 
+  AssignedTasks Task[]       @relation("AssignedTasks")
   categories    Categories[] @relation("UserCategories")
   refreshToken  String?      @map("refresh_token") @db.Text
   createdAt     DateTime     @default(now()) @map("created_at")
@@ -55,6 +55,8 @@ model Categories {
   id          Int      @unique @default(autoincrement())
   name        String
   description String?
+  color       String?
+  icon        String?
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
   tasks       Task[]   @relation("TaskCategories")

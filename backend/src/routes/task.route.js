@@ -20,7 +20,7 @@ const taskRouter = Router();
 
 
 //assign task routes
-// add to assign - query parameters - http://localhost:5000/add/assign?taskId=2&assignedTo=5
+// add to assign - query parameters - http://localhost:5000/add/assign
 taskRouter.put('/add/assign', AuthMiddleware, assignTaskController);
 // get assign task
 taskRouter.get('/get/assign', AuthMiddleware, getAssignTaskController);

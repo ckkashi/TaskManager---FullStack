@@ -15,12 +15,14 @@ const getCurrentUserID = (req) => {
 //
 // --------------- Add Category Controller - START ---------------
 const addCategoryController = asyncHandler(async (req,res) => {
+    console.log(req.body);
+    
     if(!req.body){
         throw ApiError.notFound("Name and description missing");
     }
     //fetching user id for user specific operations
     const userId = getCurrentUserID(req);
-    let {name, description} = req.body;
+    let {name, description, color, icon} = req.body;
     name = name.toLowerCase();
     const existingCategory =  await db.categories.findFirst({
         where: { name: name, userId: userId }
@@ -32,6 +34,8 @@ const addCategoryController = asyncHandler(async (req,res) => {
         data: {
             name: name,
             description,
+            color,
+            icon,
             userId
         }
     });
